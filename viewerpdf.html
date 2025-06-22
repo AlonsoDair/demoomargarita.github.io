@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Imágenes en Ventana Emergente</title>
+    <style>
+        /* Estilo para la ventana emergente (inicialmente oculta) */
+        .modal {
+            display: none; /* Oculta la ventana emergente por defecto */
+            position: fixed;
+            z-index: 1; /* Asegura que el modal esté encima de todo */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo semitransparente */
+            overflow: auto;
+        }
+
+        /* Estilo para el contenido del modal */
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Establece el ancho del modal */
+            position: relative;
+        }
+
+        /* Estilo para el botón de cierre */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Estilo para las tarjetas de imagen */
+        .carousel-container {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out; /* Animación de transición */
+        }
+
+        .card {
+            width: 300px;
+            margin: 0 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0; /* Inicia con opacidad 0 para el efecto de animación */
+            animation: fadeIn 0.5s ease-out forwards; /* Animación de desvanecimiento */
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* Animación de desvanecimiento para las tarjetas */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Botones de navegación del carrusel */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            padding: 16px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: background-color 0.3s ease;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Haz clic para ver las imágenes en ventana emergente</h1>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalBtn">Ver Imágenes</button>
+
+    <!-- La ventana emergente -->
+    <div id="myModal" class="modal">
+
+        <!-- Contenido del modal -->
+        <div class="modal-content">
+            <!-- Botón para cerrar el modal -->
+            <span class="close" id="closeModalBtn">&times;</span>
+            
+            <!-- Contenedor del carrusel -->
+            <div class="carousel-container">
+                <div id="carousel" class="carousel">
+                    <!-- Tarjetas de imágenes -->
+                    <div class="card"><img src="assets/images/Drinks 1.jpg" alt="Imagen 1"></div>
+                    <div class="card"><img src="assets/images/Drinks 2.jpg" alt="Imagen 2"></div>
+                    <div class="card"><img src="assets/images/Drinks 3.jpg" alt="Imagen 3"></div>
+                    <div class="card"><img src="assets/images/Drinks 4.jpg" alt="Imagen 4"></div>
+                </div>
+            </div>
+
+            <!-- Botones de navegación -->
+            <button class="prev" id="prevBtn">&#10094;</button>
+            <button class="next" id="nextBtn">&#10095;</button>
+        </div>
+    </div>
+
+    <script>
+        // Obtener elementos
+        var modal = document.getElementById("myModal");
+        var openModalBtn = document.getElementById("openModalBtn");
+        var closeModalBtn = document.getElementById("closeModalBtn");
+        var carousel = document.getElementById("carousel");
+        var prevBtn = document.getElementById("prevBtn");
+        var nextBtn = document.getElementById("nextBtn");
+
+        // Número de tarjetas en el carrusel
+        var totalCards = document.querySelectorAll(".card").length;
+        var currentIndex = 0;
+
+        // Abrir el modal
+        openModalBtn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // Cerrar el modal
+        closeModalBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Cerrar el modal si el usuario hace clic fuera de él
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Función para mostrar la imagen anterior
+        prevBtn.onclick = function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = totalCards - 1;
+            }
+            updateCarouselPosition();
+        }
+
+        // Función para mostrar la siguiente imagen
+        nextBtn.onclick = function() {
+            if (currentIndex < totalCards - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            updateCarouselPosition();
+        }
+
+        // Actualizar la posición del carrusel
+        function updateCarouselPosition() {
+            var cardWidth = document.querySelector(".card").offsetWidth;
+            carousel.style.transform = "translateX(-" + (currentIndex * (cardWidth + 30)) + "px)";
+        }
+    </script>
+
+</body>
+</html>
+
